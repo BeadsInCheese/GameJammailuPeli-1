@@ -7,6 +7,15 @@ public class CharacterControl : MonoBehaviour
 {
     // Start is called before the first frame update
     PlayerInput playerInput;
+    public float agility = 1.5f;
+    public float strength = 1;
+    public float endurance = 1;
+    public float ability = 1;
+    public float luck = 1;
+
+    public float fistRange=1;
+
+    Weapon weapon;
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -15,11 +24,16 @@ public class CharacterControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var mouse = Mouse.current;
+        float speed = 5 + agility * 0.2f;
+        var mouse = (Vector2)Camera.main.ScreenToWorldPoint( Mouse.current.position.ReadValue()); 
         Vector2 movement = playerInput.actions["walk"].ReadValue<Vector2>();
-        transform.position = new Vector2(movement.x*Time.deltaTime+transform.position.x,movement.y*Time.deltaTime+transform.position.y);
+        transform.position = new Vector2(speed*movement.x*Time.deltaTime+transform.position.x, speed*movement.y*Time.deltaTime+transform.position.y);
+        
         if (playerInput.actions["Attack"].triggered) {
-            Debug.Log("attacke: "+mouse.position);
+            RaycastHit2D hit=Physics2D.Raycast((Vector2)transform.position+(mouse-(Vector2)transform.position).normalized, mouse-(Vector2)transform.position,weapon!=null? weapon.range:fistRange);
+ 
+            Debug.Log("attacke: "+mouse);
         }
+        Debug.DrawLine((Vector2)transform.position + (mouse-(Vector2)transform.position  ).normalized, mouse);
     }
 }
