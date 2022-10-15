@@ -16,9 +16,11 @@ public class CharacterControl : MonoBehaviour
     public float fistRange=1;
 
     Weapon weapon;
+    Rigidbody2D rigidBody;
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
+        rigidBody = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -27,7 +29,7 @@ public class CharacterControl : MonoBehaviour
         float speed = 5 + agility * 0.2f;
         var mouse = (Vector2)Camera.main.ScreenToWorldPoint( Mouse.current.position.ReadValue()); 
         Vector2 movement = playerInput.actions["walk"].ReadValue<Vector2>();
-        transform.position = new Vector2(speed*movement.x*Time.deltaTime+transform.position.x, speed*movement.y*Time.deltaTime+transform.position.y);
+        rigidBody.velocity = new Vector2(speed*movement.x, speed*movement.y);
         
         if (playerInput.actions["Attack"].triggered) {
             RaycastHit2D hit=Physics2D.Raycast((Vector2)transform.position+(mouse-(Vector2)transform.position).normalized, mouse-(Vector2)transform.position,weapon!=null? weapon.range:fistRange);
