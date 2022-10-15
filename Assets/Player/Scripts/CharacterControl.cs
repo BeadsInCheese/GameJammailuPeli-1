@@ -15,7 +15,11 @@ public class CharacterControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        var mouse = Mouse.current;
         Vector2 movement = playerInput.actions["walk"].ReadValue<Vector2>();
         transform.position = new Vector2(movement.x*Time.deltaTime+transform.position.x,movement.y*Time.deltaTime+transform.position.y);
+        if (playerInput.actions["Attack"].triggered) {
+            Debug.Log("attacke: "+mouse.position);
+        }
     }
 }
