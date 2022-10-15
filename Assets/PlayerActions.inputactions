@@ -1,0 +1,34 @@
+{
+    "name": "PlayerActions",
+    "maps": [
+        {
+            "name": "InDungeon",
+            "id": "f93528e1-10ce-4e0d-935b-92d03a390136",
+            "actions": [
+                {
+                    "name": "Walk",
+                    "type": "Value",
+                    "id": "da355a20-31d5-4715-a621-fb05bf1205f3",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "173b295f-44aa-4398-a9a9-c2debbaf211e",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Walk",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
