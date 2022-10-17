@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tree : Node
+public class BTTree : Node
 {
-    public Tree()
+    public BTTree()
     {
         name="Tree";
     }
