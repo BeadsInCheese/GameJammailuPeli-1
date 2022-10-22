@@ -24,6 +24,24 @@ public class Navigation : MonoBehaviour
              traversed=false;
         }
     }
+    public class BFDNavNode
+    {
+        public BFDNavNode parent;
+        public NavNode current;
+        public BFDNavNode(NavNode c) {
+            this.current = c;
+        }
+        public List<NavNode> GetPath(List<NavNode> path) {
+            path.Add(this.current);
+            if (parent != null)
+            {
+                return parent.GetPath(path);
+            }
+            else {
+                return path;
+            }
+        }
+    }
     public void constructTree(TileBase[] tiles)
     {
         for (int x = 0; x < width-1; x++)
@@ -109,7 +127,7 @@ public class Navigation : MonoBehaviour
 
     }
 
-    public List<NavNode> BFS(NavNode root,NavNode target,List<NavNode>path) {
+    public List<NavNode> DFS(NavNode root,NavNode target,List<NavNode>path) {
         if (root==null||root.traversed) {
             return null;
         }
@@ -126,7 +144,7 @@ public class Navigation : MonoBehaviour
             }
         }
         foreach (var child in root.children) {
-            var result=BFS(child,target,localPath);
+            var result=DFS(child,target,localPath);
             if (result !=null) {
                 
                 return result;
@@ -137,20 +155,103 @@ public class Navigation : MonoBehaviour
         
     
     }
-    void Start()
+    public Vector2 MapToWorldPos(Vector2 pos) {
+        return map.CellToWorld(new Vector3Int((int)pos.x, (int)pos.y, 0))+map.origin;
+
+    }
+    public Vector2 WorldToMapPos(Vector2 pos)
     {
-        getNavArea(map.cellBounds);
-        constructTree(tiles);
-        var p=BFS(allNodes[1,1], allNodes[1, 10],new List<NavNode>());
+        var temp = map.WorldToCell(new Vector3(pos.x, pos.y,0)-map.origin);
+        return new Vector2(temp.x,temp.y);
+
+    }
+    public List<NavNode> BFS(NavNode root, NavNode target, List<NavNode> path)
+    {
+        List<NavNode> localPath = new List<NavNode>(path);
+        Queue<BFDNavNode> searcharea = new Queue<BFDNavNode>();
+        if (root == null) {
+            return null;
+        }
+        BFDNavNode r= new BFDNavNode(root);
+        searcharea.Enqueue(r);
+        r.current.traversed = true;
+        while (searcharea.Count > 0) {
+            var v = searcharea.Dequeue();
+            if (v.current == target) {
+
+                return v.GetPath(new List<NavNode>());
+            }
+            foreach (NavNode e in v.current.children)
+            {
+                if (e != null&&!e.traversed)
+                {
+                    e.traversed = true;
+                    BFDNavNode bfdEdge = new BFDNavNode(e);
+                    bfdEdge.parent = v;
+                    searcharea.Enqueue(bfdEdge);
+                }
+            }
+        }
+        return null;
+    
+    }
+    List<NavNode> p;
+    public void Start()
+    {
+        retarget();
+
         Debug.Log("Path");
         foreach (var i in p) {
             Debug.Log(i.x+"   "+i.y);
+           
         }
+        for (int i = 0; i< p.Count-1; i++)
+        {
+            Debug.DrawLine(MapToWorldPos(new Vector2(p[i].x, p[i].y)), MapToWorldPos(new Vector2(p[i+1].x, p[i+1].y)));
+
+        }
+        rb = this.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
+   public Vector2 moveTarget=new Vector2(0,0);
+    Rigidbody2D rb;
+    public float speed;
+    public Transform tar;
+    float recalctimer = 3;
+    float recalctimerMax = 3;
+    public void retarget() {
+        getNavArea(map.cellBounds);
+        constructTree(tiles);
+        var temp = WorldToMapPos(tar.transform.position);
+        var playerGridPos = WorldToMapPos(transform.position);
+        p = BFS(allNodes[(int)Mathf.Round(playerGridPos.x), (int)Mathf.Round(playerGridPos.y)], allNodes[(int)temp.x, (int)temp.y], new List<NavNode>());
+    }
     void Update()
     {
-        
+            retarget();
+  
+
+
+        if (p != null)
+        {
+            for (int i = 0; i < p.Count - 1; i++)
+            {
+                //Debug.DrawLine(MapToWorldPos(new Vector2(0,0)), MapToWorldPos(new Vector2(30,30)));
+                Debug.DrawLine(MapToWorldPos(new Vector2(p[i].x, p[i].y)) + (Vector2)map.cellSize/2, MapToWorldPos(new Vector2(p[i + 1].x, p[i + 1].y))+(Vector2)map.cellSize/2);
+
+
+            }
+            Vector2 tWorldpos=new Vector2(0,0);
+            if (p.Count > 1) {
+                tWorldpos = MapToWorldPos(new Vector2(p[p.Count - 2].x, p[p.Count - 2].y)) + (Vector2)map.cellSize / 2;
+            }
+
+                moveTarget = (tWorldpos - (Vector2)transform.position);
+            Debug.DrawRay(transform.position, moveTarget.normalized);
+
+
+        }
+         rb.velocity = moveTarget.normalized*speed;
     }
 }
