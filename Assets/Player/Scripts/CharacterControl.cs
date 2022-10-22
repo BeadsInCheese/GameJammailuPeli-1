@@ -5,8 +5,6 @@ using UnityEngine.InputSystem;
 
 public class CharacterControl : MonoBehaviour
 {
-    // Start is called before the first frame update
-    PlayerInput playerInput;
     public float agility = 1.5f;
     public float strength = 1;
     public float endurance = 1;
@@ -15,8 +13,12 @@ public class CharacterControl : MonoBehaviour
 
     public float fistRange=1;
 
-    Weapon weapon;
-    Rigidbody2D rigidBody;
+    private PlayerInput playerInput;
+    
+    private Weapon weapon;
+    private Rigidbody2D rigidBody;
+
+    // Start is called before the first frame update
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -34,8 +36,19 @@ public class CharacterControl : MonoBehaviour
         if (playerInput.actions["Attack"].triggered) {
             RaycastHit2D hit=Physics2D.Raycast((Vector2)transform.position+(mouse-(Vector2)transform.position).normalized, mouse-(Vector2)transform.position,weapon!=null? weapon.range:fistRange);
  
-            Debug.Log("attacke: "+mouse);
+            Debug.Log("attacked: "+mouse);
         }
         Debug.DrawLine((Vector2)transform.position + (mouse-(Vector2)transform.position  ).normalized, mouse);
+        
+        if (playerInput.actions["PickItem"].triggered) 
+        {
+            Debug.Log("Picked up an item/Dropped an item");
+            
+            if (weapon == null) {
+                Debug.Log(mouse);
+            }
+        }
+        
+        transform.right = (mouse - (Vector2)transform.position).normalized;
     }
 }
