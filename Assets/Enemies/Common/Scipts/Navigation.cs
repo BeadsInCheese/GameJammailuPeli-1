@@ -54,8 +54,6 @@ public class Navigation : MonoBehaviour
 
         if (root.x + root.y * width < tiles.Length-10)
         {
-            Debug.Log(root.x+"  "+root.y+" "+width+" "+height);
-            Debug.Log(allNodes.GetLength(0)+" "+ allNodes.GetLength(1));
 
             if (tiles[root.x + root.y * width] == null && root.children.Count == 0&&root!=null)
             {
