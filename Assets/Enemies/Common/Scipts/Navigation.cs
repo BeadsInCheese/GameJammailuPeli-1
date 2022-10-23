@@ -13,12 +13,14 @@ public class Navigation : MonoBehaviour
     int height=0;
     TileBase[] tiles;
     NavNode[,] allNodes;
-    public class NavNode {
+    public class NavNode 
+    {
        public  List<NavNode> children = new List<NavNode>();
         public int x;
         public int y;
        public  bool traversed = false;
-        public NavNode(int x, int y) {
+        public NavNode(int x, int y) 
+        {
             this.x = x;
             this.y = y;
              traversed=false;
@@ -31,7 +33,8 @@ public class Navigation : MonoBehaviour
         public BFDNavNode(NavNode c) {
             this.current = c;
         }
-        public List<NavNode> GetPath(List<NavNode> path) {
+        public List<NavNode> GetPath(List<NavNode> path) 
+        {
             path.Add(this.current);
             if (parent != null)
             {
@@ -42,7 +45,7 @@ public class Navigation : MonoBehaviour
             }
         }
     }
-    public void constructTree(TileBase[] tiles)
+    public void ConstructTree(TileBase[] tiles)
     {
         for (int x = 0; x < width-1; x++)
         {
@@ -59,15 +62,16 @@ public class Navigation : MonoBehaviour
                 }
             }
         }
-        foreach (var i in allNodes) {
+        foreach (var i in allNodes) 
+        {
             if (i != null)
             {
-                constructTree(i, tiles);
+                ConstructTree(i, tiles);
             }
         }
     }
 
-    public void constructTree(NavNode root, TileBase[] tiles)
+    public void ConstructTree(NavNode root, TileBase[] tiles)
     {
 
         if (root.x + root.y * width < tiles.Length-1)
@@ -103,7 +107,8 @@ public class Navigation : MonoBehaviour
             }
         }
     }
-    public void getNavArea(BoundsInt bounds) {
+    public void GetNavArea(BoundsInt bounds) 
+    {
         tiles=map.GetTilesBlock(bounds);
         width = bounds.size.x;
         height = bounds.size.y;
@@ -127,23 +132,28 @@ public class Navigation : MonoBehaviour
 
     }
 
-    public List<NavNode> DFS(NavNode root,NavNode target,List<NavNode>path) {
-        if (root==null||root.traversed) {
+    public List<NavNode> DFS(NavNode root,NavNode target,List<NavNode>path) 
+    {
+        if (root==null||root.traversed) 
+        {
             return null;
         }
             root.traversed = true;
         
         List<NavNode> localPath = new List<NavNode>(path);
         localPath.Add(root);
-        if (root == target) {
+        if (root == target) 
+        {
             return localPath;
         }
-        foreach (var child in root.children) {
+        foreach (var child in root.children) 
+        {
             if (child == target) {
                 return localPath;
             }
         }
-        foreach (var child in root.children) {
+        foreach (var child in root.children) 
+        {
             var result=DFS(child,target,localPath);
             if (result !=null) {
                 
@@ -155,7 +165,8 @@ public class Navigation : MonoBehaviour
         
     
     }
-    public Vector2 MapToWorldPos(Vector2 pos) {
+    public Vector2 MapToWorldPos(Vector2 pos) 
+    {
         return map.CellToWorld(new Vector3Int((int)pos.x, (int)pos.y, 0))+map.origin;
 
     }
@@ -169,15 +180,18 @@ public class Navigation : MonoBehaviour
     {
         List<NavNode> localPath = new List<NavNode>(path);
         Queue<BFDNavNode> searcharea = new Queue<BFDNavNode>();
-        if (root == null) {
+        if (root == null) 
+        {
             return null;
         }
         BFDNavNode r= new BFDNavNode(root);
         searcharea.Enqueue(r);
         r.current.traversed = true;
-        while (searcharea.Count > 0) {
+        while (searcharea.Count > 0) 
+        {
             var v = searcharea.Dequeue();
-            if (v.current == target) {
+            if (v.current == target) 
+            {
 
                 return v.GetPath(new List<NavNode>());
             }
@@ -198,7 +212,7 @@ public class Navigation : MonoBehaviour
     List<NavNode> p;
     public void Start()
     {
-        retarget();
+        Retarget();
 
         Debug.Log("Path");
         foreach (var i in p) {
@@ -218,16 +232,17 @@ public class Navigation : MonoBehaviour
     Rigidbody2D rb;
     public float speed;
     public Transform tar;
-    public void retarget() {
-        getNavArea(map.cellBounds);
-        constructTree(tiles);
+    public void Retarget() 
+    {
+        GetNavArea(map.cellBounds);
+        ConstructTree(tiles);
         var temp = WorldToMapPos(tar.transform.position);
         var playerGridPos = WorldToMapPos(transform.position);
         p = BFS(allNodes[(int)Mathf.Round(playerGridPos.x), (int)Mathf.Round(playerGridPos.y)], allNodes[(int)temp.x, (int)temp.y], new List<NavNode>());
     }
     void Update()
     {
-            retarget();
+            Retarget();
   
 
 
