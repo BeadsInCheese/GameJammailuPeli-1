@@ -70,7 +70,7 @@ public class Navigation : MonoBehaviour
     public void constructTree(NavNode root, TileBase[] tiles)
     {
 
-        if (root.x + root.y * width < tiles.Length-10)
+        if (root.x + root.y * width < tiles.Length-1)
         {
 
             if (tiles[root.x + root.y * width] == null && root.children.Count == 0&&root!=null)
@@ -218,8 +218,6 @@ public class Navigation : MonoBehaviour
     Rigidbody2D rb;
     public float speed;
     public Transform tar;
-    float recalctimer = 3;
-    float recalctimerMax = 3;
     public void retarget() {
         getNavArea(map.cellBounds);
         constructTree(tiles);
