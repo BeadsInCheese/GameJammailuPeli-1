@@ -11,8 +11,12 @@ public class StatsSystem
     private float luck = 1;
     private float fistRange = 1;
 
-    private int maxHP;
     private int currentHP;
+
+    public StatsSystem()
+    {
+        currentHP = GetMaxHP();
+    }
     public float GetSpeed()
     {
         return 5 + agility * 0.2f;
@@ -26,7 +30,13 @@ public class StatsSystem
         return currentHP;
     }
     public int GetMaxHP() {
-        return (int)(endurance * 1);
-    
+        return (int)(Mathf.Log(2, 1 + endurance) * 30);
+    }
+    public int GetMeleeDamage() {
+        return -(int)(Mathf.Log(2, 1 + strength) * 5);
+    }
+    public void ChangeHP(int n) 
+    {
+        currentHP=Mathf.Clamp(currentHP+n, 0, GetMaxHP());
     }
 }

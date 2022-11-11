@@ -7,7 +7,7 @@ public class CharacterControl : MonoBehaviour
 {
     // Start is called before the first frame update
     PlayerInput playerInput;
-    StatsSystem stats = new StatsSystem();
+    public StatsSystem stats = new StatsSystem();
     public static CharacterControl instance;
 
     Weapon weapon;
@@ -39,8 +39,14 @@ public class CharacterControl : MonoBehaviour
         
         if (playerInput.actions["Attack"].triggered) {
             RaycastHit2D hit=Physics2D.Raycast((Vector2)transform.position+(mouse-(Vector2)transform.position).normalized, mouse-(Vector2)transform.position,weapon!=null? weapon.range:stats.GetFistRange());
- 
-            Debug.Log("attacke: "+mouse);
+            if (hit.collider!=null&&hit.collider.gameObject.tag.Equals("Enemy"))
+            {
+                
+                var enemy = hit.collider.gameObject.GetComponent<EnemyStats>();
+                Debug.Log("EnemyHP" + enemy.stats.GetCurrentHP());
+                enemy.stats.ChangeHP(stats.GetMeleeDamage());
+            }
+            //Debug.Log("attacke: "+mouse);
         }
         Debug.DrawLine((Vector2)transform.position + (mouse-(Vector2)transform.position  ).normalized, mouse);
     }
