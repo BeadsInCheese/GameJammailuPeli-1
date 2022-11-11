@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 10951252}
   - component: {fileID: 10951255}
   - component: {fileID: 10951256}
+  - component: {fileID: 10951257}
   m_Layer: 0
   m_Name: Triangle
   m_TagString: Untagged
@@ -155,10 +156,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb2d3c04d1fb839499d351cd6fff300f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Target: {x: 0, y: 0}
   map: {fileID: 1882546667}
+  moving: 0
   moveTarget: {x: 0, y: 0}
   speed: 1
-  tar: {fileID: 1376447087}
 --- !u!212 &10951253
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -241,7 +243,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -263,6 +265,21 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0.21133333}
   serializedVersion: 2
   m_Radius: 0.25
+--- !u!114 &10951257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10951251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91f6d2af33d4841488cd38df2d79ae8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nav: {fileID: 10951252}
+  attackWaitTime: 1
+  dashForce: 300
 --- !u!1 &1376447086
 GameObject:
   m_ObjectHideFlags: 0
@@ -2133,6 +2150,7 @@ GameObject:
   - component: {fileID: 2094047297}
   - component: {fileID: 2094047298}
   - component: {fileID: 2094047299}
+  - component: {fileID: 2094047302}
   - component: {fileID: 2094047300}
   - component: {fileID: 2094047301}
   m_Layer: 0
@@ -2170,12 +2188,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c118352217fd30745aa4e4d3a716fd7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agility: 1.5
-  strength: 1
-  endurance: 1
-  ability: 1
-  luck: 1
-  fistRange: 1
 --- !u!114 &2094047299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2253,3 +2265,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &2094047302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2094047296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa9afe68d760d849bee5029b4dd09aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
