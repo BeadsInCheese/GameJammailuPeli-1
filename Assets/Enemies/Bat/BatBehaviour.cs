@@ -7,7 +7,7 @@ public class BatBehaviour : MonoBehaviour
     // Start is called before the first frame update
     public Navigation nav;
     BTTree Brain;
-    float proximityTreshhold=0.3f;
+    float proximityTreshold=0.3f;
     float sight=10;
     float attackRange = 5;
     public float attackWaitTime=1;
@@ -18,7 +18,7 @@ public class BatBehaviour : MonoBehaviour
         {
             return Node.Status.FAILURE;
         }
-        if (Mathf.Abs(((Vector2)(transform.position) - nav.Target).magnitude)<proximityTreshhold)
+        if (Mathf.Abs(((Vector2)(transform.position) - nav.Target).magnitude)<proximityTreshold)
         {
             nav.Target = new Vector2(transform.position.x + Random.Range(-30, 30), transform.position.y + Random.Range(-30, 30));
             
