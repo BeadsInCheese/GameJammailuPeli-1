@@ -135,11 +135,13 @@ GameObject:
   - component: {fileID: 10951253}
   - component: {fileID: 10951252}
   - component: {fileID: 10951255}
+  - component: {fileID: 10951258}
   - component: {fileID: 10951256}
   - component: {fileID: 10951257}
+  - component: {fileID: 10951259}
   m_Layer: 0
   m_Name: Triangle
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -221,7 +223,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 10951251}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.772, y: -8.22, z: 0}
+  m_LocalPosition: {x: 8.772, y: -3.21, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -280,6 +282,31 @@ MonoBehaviour:
   nav: {fileID: 10951252}
   attackWaitTime: 1
   dashForce: 300
+--- !u!114 &10951258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10951251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa9afe68d760d849bee5029b4dd09aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 10
+--- !u!114 &10951259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10951251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ef56cf4fc754fd45b85855e7671578e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1376447086
 GameObject:
   m_ObjectHideFlags: 0
@@ -2150,7 +2177,6 @@ GameObject:
   - component: {fileID: 2094047297}
   - component: {fileID: 2094047298}
   - component: {fileID: 2094047299}
-  - component: {fileID: 2094047302}
   - component: {fileID: 2094047300}
   - component: {fileID: 2094047301}
   m_Layer: 0
@@ -2265,15 +2291,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &2094047302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2094047296}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: daa9afe68d760d849bee5029b4dd09aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
