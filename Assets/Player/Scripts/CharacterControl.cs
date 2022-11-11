@@ -14,6 +14,7 @@ public class CharacterControl : MonoBehaviour
     public float luck = 1;
 
     public float fistRange=1;
+    public static CharacterControl instance;
 
     Weapon weapon;
     Rigidbody2D rigidBody;
@@ -21,6 +22,17 @@ public class CharacterControl : MonoBehaviour
     {
         playerInput = GetComponent<PlayerInput>();
         rigidBody = GetComponent<Rigidbody2D>();
+    }
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }else {
+            Destroy(instance.gameObject);
+            instance = this;
+        
+        }
     }
 
     // Update is called once per frame
