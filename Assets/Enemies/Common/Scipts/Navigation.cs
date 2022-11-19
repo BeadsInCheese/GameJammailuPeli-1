@@ -6,9 +6,9 @@ using UnityEngine.Tilemaps;
 public class Navigation : MonoBehaviour
 {
     // Start is called before the first frame update
-    Vector2 Target;
+    public Vector2 Target;
     public Tilemap map;
-    int vision = 10;
+    public bool moving = false;
     int width;
     int height=0;
     TileBase[] tiles;
@@ -212,7 +212,7 @@ public class Navigation : MonoBehaviour
     List<NavNode> p;
     public void Start()
     {
-        Retarget();
+        Retarget(Target);
 
         Debug.Log("Path");
         foreach (var i in p) {
@@ -231,40 +231,43 @@ public class Navigation : MonoBehaviour
    public Vector2 moveTarget=new Vector2(0,0);
     Rigidbody2D rb;
     public float speed;
-    public Transform tar;
-    public void Retarget() 
+    public void Retarget(Vector2 tar) 
     {
         GetNavArea(map.cellBounds);
         ConstructTree(tiles);
-        var temp = WorldToMapPos(tar.transform.position);
+        var temp = WorldToMapPos(tar);
         var playerGridPos = WorldToMapPos(transform.position);
         p = BFS(allNodes[(int)Mathf.Round(playerGridPos.x), (int)Mathf.Round(playerGridPos.y)], allNodes[(int)temp.x, (int)temp.y], new List<NavNode>());
     }
     void Update()
     {
-            Retarget();
-  
-
-
-        if (p != null)
+        if (moving)
         {
-            for (int i = 0; i < p.Count - 1; i++)
+            Retarget(Target);
+
+
+
+            if (p != null)
             {
-                //Debug.DrawLine(MapToWorldPos(new Vector2(0,0)), MapToWorldPos(new Vector2(30,30)));
-                Debug.DrawLine(MapToWorldPos(new Vector2(p[i].x, p[i].y)) + (Vector2)map.cellSize/2, MapToWorldPos(new Vector2(p[i + 1].x, p[i + 1].y))+(Vector2)map.cellSize/2);
+                for (int i = 0; i < p.Count - 1; i++)
+                {
+                    //Debug.DrawLine(MapToWorldPos(new Vector2(0,0)), MapToWorldPos(new Vector2(30,30)));
+                    Debug.DrawLine(MapToWorldPos(new Vector2(p[i].x, p[i].y)) + (Vector2)map.cellSize / 2, MapToWorldPos(new Vector2(p[i + 1].x, p[i + 1].y)) + (Vector2)map.cellSize / 2);
 
 
-            }
-            Vector2 tWorldpos=new Vector2(0,0);
-            if (p.Count > 1) {
-                tWorldpos = MapToWorldPos(new Vector2(p[p.Count - 2].x, p[p.Count - 2].y)) + (Vector2)map.cellSize / 2;
-            }
+                }
+                Vector2 tWorldpos = new Vector2(0, 0);
+                if (p.Count > 1)
+                {
+                    tWorldpos = MapToWorldPos(new Vector2(p[p.Count - 2].x, p[p.Count - 2].y)) + (Vector2)map.cellSize / 2;
+                }
 
                 moveTarget = (tWorldpos - (Vector2)transform.position);
-            Debug.DrawRay(transform.position, moveTarget.normalized);
+                Debug.DrawRay(transform.position, moveTarget.normalized);
 
 
+            }
+            rb.velocity = moveTarget.normalized * speed;
         }
-         rb.velocity = moveTarget.normalized*speed;
     }
 }
