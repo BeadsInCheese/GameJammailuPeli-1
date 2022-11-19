@@ -4,18 +4,9 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public float damage = 1;
-    public float attackSpeed = 1;
+    public int damage = 1;
+    public float attackSpeed = 0.5f;
     public float range = 5;
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public GameObject bulletPrefab = null;
+    public Transform muzzle = null;
 }

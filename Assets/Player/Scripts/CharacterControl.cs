@@ -34,6 +34,8 @@ public class CharacterControl : MonoBehaviour
         }
     }
 
+    private float cooldown;
+
     // Update is called once per frame
     void Update()
     {
@@ -42,7 +44,39 @@ public class CharacterControl : MonoBehaviour
         Vector2 movement = playerInput.actions["walk"].ReadValue<Vector2>();
         rigidBody.velocity = new Vector2(speed * movement.x, speed * movement.y);
 
-        if (playerInput.actions["Attack"].triggered)
+        HandleAttack(mouse);
+
+        Debug.DrawLine((Vector2)transform.position + (mouse - (Vector2)transform.position).normalized, (Vector2)transform.position + (mouse - (Vector2)transform.position).normalized + (mouse - (Vector2)transform.position).normalized * (weapon != null ? weapon.range : stats.GetFistRange()));
+
+        HandlePickup(mouse);
+
+        transform.right = (mouse - (Vector2)transform.position).normalized;
+
+        rigidBody.velocity = new Vector2(speed * movement.x, speed * movement.y);
+
+        if (cooldown > 0)
+        {
+            cooldown -= Time.deltaTime;
+        }
+    }
+
+    void HandleAttack(Vector2 mouse)
+    {
+        if (!playerInput.actions["Attack"].triggered || cooldown > 0) return;
+
+        // Using ranged (particle) weapon
+        if (weapon != null && weapon.bulletPrefab != null)
+        {
+            cooldown = weapon.attackSpeed;
+            var bf = Instantiate(weapon.bulletPrefab);
+            bf.transform.position = weapon.muzzle.position;
+            var bullet = bf.GetComponent<Bullet>();
+            bullet.damagesPlayer = false;
+            bullet.bulletDamage = weapon.damage;
+            bullet.direction = (mouse - (Vector2)(transform.position)).normalized;
+        }
+        // No weapon or melee weapon
+        else
         {
             var hits = Physics2D.RaycastAll((Vector2)transform.position + (mouse - (Vector2)transform.position).normalized, mouse - (Vector2)transform.position, weapon != null ? weapon.range : stats.GetFistRange());
             foreach (RaycastHit2D hit in hits)
@@ -56,8 +90,10 @@ public class CharacterControl : MonoBehaviour
                 }
             }
         }
-        Debug.DrawLine((Vector2)transform.position + (mouse - (Vector2)transform.position).normalized, (Vector2)transform.position + (mouse - (Vector2)transform.position).normalized + (mouse - (Vector2)transform.position).normalized * (weapon != null ? weapon.range : stats.GetFistRange()));
+    }
 
+    void HandlePickup(Vector2 mouse)
+    {
         if (playerInput.actions["PickItem"].triggered && weapon != null)
         {
             Debug.Log("Dropped an item");
@@ -70,22 +106,14 @@ public class CharacterControl : MonoBehaviour
         {
             Debug.Log("Picked up an item");
             touchingWeaponCollider.transform.SetParent(transform);
-            touchingWeaponCollider.transform.LookAt(mouse);
-            var playerPosition = (Vector2)transform.position;
 
-            float mouseAngle = (180 / Mathf.PI) * Mathf.Atan2(mouse.y - playerPosition.y, mouse.x - playerPosition.x);
-            touchingWeaponCollider.transform.rotation = Quaternion.Euler(0, 0, mouseAngle - 90);
-            touchingWeaponCollider.transform.position = playerPosition + (mouse - (Vector2)transform.position).normalized;
-
+            touchingWeaponCollider.transform.up = -((Vector2)transform.position - mouse);
+            touchingWeaponCollider.transform.position = (Vector2)transform.position + (mouse - (Vector2)transform.position).normalized;
 
             weapon = touchingWeaponCollider.gameObject.GetComponent<Weapon>();
             touchingWeaponCollider.enabled = false;
             touchingWeaponCollider = null;
         }
-
-        transform.right = (mouse - (Vector2)transform.position).normalized;
-
-        rigidBody.velocity = new Vector2(speed * movement.x, speed * movement.y);
     }
 
     void OnTriggerEnter2D(Collider2D collider)

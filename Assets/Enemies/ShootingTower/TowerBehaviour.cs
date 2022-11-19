@@ -8,14 +8,14 @@ public class TowerBehaviour : MonoBehaviour
     public GameObject bulletPrefab;
     float sight = 10;
     float attackRange = 5;
-     GameObject targetObject;
+    GameObject targetObject;
     public Vector2 target;
     public float maxCooldown = 0.5f;
-
-
     // Start is called before the first frame update
-    public Node.Status IsInRange() {
-        if ((target - (Vector2)(transform.position)).magnitude < attackRange) {
+    public Node.Status IsInRange()
+    {
+        if ((target - (Vector2)(transform.position)).magnitude < attackRange)
+        {
             return Node.Status.FAILURE;
         }
         else
@@ -23,7 +23,7 @@ public class TowerBehaviour : MonoBehaviour
             return Node.Status.SUCCESS;
         }
     }
-
+    
     private float cooldown;
     public Node.Status Shoot()
     {
@@ -38,7 +38,6 @@ public class TowerBehaviour : MonoBehaviour
         }
         return Node.Status.SUCCESS;
     }
-
     void Start()
     {
         targetObject = CharacterControl.instance.gameObject;
