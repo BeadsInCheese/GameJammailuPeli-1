@@ -45,17 +45,19 @@ public class CharacterControl : MonoBehaviour
 
         if (playerInput.actions["Attack"].triggered)
         {
-            RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position + (mouse - (Vector2)transform.position).normalized, mouse - (Vector2)transform.position, weapon != null ? weapon.range : stats.GetFistRange());
-            if (hit.collider != null && hit.collider.gameObject.tag.Equals("Enemy"))
-            {
-                
-                var enemy = hit.collider.gameObject.GetComponent<EnemyStats>();
-                Debug.Log("EnemyHP" + enemy.stats.GetCurrentHP());
-                float damage = weapon != null ? weapon.damage * stats.GetMeleeDamage() : stats.GetMeleeDamage();
-                enemy.stats.ChangeHP((int)damage);
+            var hits = Physics2D.RaycastAll((Vector2)transform.position + (mouse - (Vector2)transform.position).normalized, mouse - (Vector2)transform.position, weapon != null ? weapon.range : stats.GetFistRange());
+            foreach (RaycastHit2D hit in hits) {
+                if (hit.collider != null && hit.collider.gameObject.tag.Equals("Enemy"))
+                {
+
+                    var enemy = hit.collider.gameObject.GetComponent<EnemyStats>();
+                    Debug.Log("EnemyHP" + enemy.stats.GetCurrentHP());
+                    float damage = weapon != null ? weapon.damage * stats.GetMeleeDamage() : stats.GetMeleeDamage();
+                    enemy.stats.ChangeHP((int)damage);
+                } 
             }
         }
-        Debug.DrawLine((Vector2)transform.position + (mouse - (Vector2)transform.position).normalized, mouse);
+        Debug.DrawLine((Vector2)transform.position + (mouse - (Vector2)transform.position).normalized, (Vector2)transform.position + (mouse - (Vector2)transform.position).normalized + (mouse - (Vector2)transform.position).normalized* (weapon != null ? weapon.range : stats.GetFistRange()));
 
         if (weapon != null && playerInput.actions["PickItem"].triggered)
         {

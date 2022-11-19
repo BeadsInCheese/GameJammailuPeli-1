@@ -444,7 +444,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 1638280580930720782, guid: eb4648a4d5ce4c142a50f94bf22babde, type: 3}
   target: {x: 0, y: 0}
-  maxCooldown: 0.5
+  maxCooldown: 0.1
 --- !u!212 &243922960
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -609,7 +609,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -89.662}
 --- !u!212 &1254464611
 SpriteRenderer:
@@ -851,7 +851,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1614686540
 GameObject:
