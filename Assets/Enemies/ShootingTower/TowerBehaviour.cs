@@ -33,6 +33,7 @@ public class TowerBehaviour : MonoBehaviour
             var bullet = bf.GetComponent<Bullet>();
             bullet.direction = dir;
         }
+        transform.right = (Vector2)transform.position-target;
         return Node.Status.SUCCESS;
     }
     void Start()
