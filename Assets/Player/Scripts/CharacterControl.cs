@@ -48,10 +48,11 @@ public class CharacterControl : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position + (mouse - (Vector2)transform.position).normalized, mouse - (Vector2)transform.position, weapon != null ? weapon.range : stats.GetFistRange());
             if (hit.collider != null && hit.collider.gameObject.tag.Equals("Enemy"))
             {
-
+                
                 var enemy = hit.collider.gameObject.GetComponent<EnemyStats>();
                 Debug.Log("EnemyHP" + enemy.stats.GetCurrentHP());
-                enemy.stats.ChangeHP(stats.GetMeleeDamage());
+                float damage = weapon != null ? weapon.damage * stats.GetMeleeDamage() : stats.GetMeleeDamage();
+                enemy.stats.ChangeHP((int)damage);
             }
         }
         Debug.DrawLine((Vector2)transform.position + (mouse - (Vector2)transform.position).normalized, mouse);
