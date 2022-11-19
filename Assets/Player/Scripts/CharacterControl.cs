@@ -10,7 +10,7 @@ public class CharacterControl : MonoBehaviour
     public static CharacterControl instance;
 
     private Weapon weapon;
-    private Collider2D collidedWeapon;
+    private Collider2D touchingWeaponCollider;
 
     private Rigidbody2D rigidBody;
 
@@ -20,7 +20,7 @@ public class CharacterControl : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         rigidBody = GetComponent<Rigidbody2D>();
     }
-    
+
     private void Awake()
     {
         if (instance == null)
@@ -31,7 +31,6 @@ public class CharacterControl : MonoBehaviour
         {
             Destroy(instance.gameObject);
             instance = this;
-
         }
     }
 
@@ -48,31 +47,37 @@ public class CharacterControl : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position + (mouse - (Vector2)transform.position).normalized, mouse - (Vector2)transform.position, weapon != null ? weapon.range : stats.GetFistRange());
             if (hit.collider != null && hit.collider.gameObject.tag.Equals("Enemy"))
             {
-
                 var enemy = hit.collider.gameObject.GetComponent<EnemyStats>();
                 Debug.Log("EnemyHP" + enemy.stats.GetCurrentHP());
                 enemy.stats.ChangeHP(stats.GetMeleeDamage());
             }
         }
+
         Debug.DrawLine((Vector2)transform.position + (mouse - (Vector2)transform.position).normalized, mouse);
 
-        if (weapon != null && playerInput.actions["PickItem"].triggered)
+        if (playerInput.actions["PickItem"].triggered && weapon != null)
         {
             Debug.Log("Dropped an item");
-            var weaponTransform = transform.Find("WeaponItem");
-            weaponTransform.SetParent(null);
-            var weaponCollider = weaponTransform.gameObject.GetComponent<BoxCollider2D>();
-            weaponCollider.enabled = true;
+            weapon.transform.SetParent(null);
+            weapon.transform.gameObject.GetComponent<BoxCollider2D>().enabled = true;
             weapon = null;
         }
 
-        if (weapon == null && playerInput.actions["PickItem"].triggered && collidedWeapon != null)
+        if (playerInput.actions["PickItem"].triggered && touchingWeaponCollider != null && weapon == null)
         {
             Debug.Log("Picked up an item");
-            collidedWeapon.transform.SetParent(transform);
-            weapon = collidedWeapon.gameObject.GetComponent<Weapon>();
-            collidedWeapon.enabled = false;
-            collidedWeapon = null;
+            touchingWeaponCollider.transform.SetParent(transform);
+            touchingWeaponCollider.transform.LookAt(mouse);
+            var playerPosition = (Vector2)transform.position;
+
+            float mouseAngle = (180 / Mathf.PI) * Mathf.Atan2(mouse.y - playerPosition.y, mouse.x - playerPosition.x);
+            touchingWeaponCollider.transform.rotation = Quaternion.Euler(0, 0, mouseAngle - 90);
+            touchingWeaponCollider.transform.position = playerPosition + (mouse - (Vector2)transform.position).normalized;
+
+
+            weapon = touchingWeaponCollider.gameObject.GetComponent<Weapon>();
+            touchingWeaponCollider.enabled = false;
+            touchingWeaponCollider = null;
         }
 
         transform.right = (mouse - (Vector2)transform.position).normalized;
@@ -82,17 +87,17 @@ public class CharacterControl : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        if (weapon == null && collider.gameObject.name == "WeaponItem")
+        if (weapon == null && collider.gameObject.tag == "Weapon")
         {
-            collidedWeapon = collider;
+            touchingWeaponCollider = collider;
         }
     }
 
     void OnTriggerExit2D(Collider2D collider)
     {
-        if (collider.gameObject.name == "WeaponItem")
+        if (collider.gameObject.tag == "Weapon")
         {
-            collidedWeapon = null;
+            touchingWeaponCollider = null;
         }
     }
 }
